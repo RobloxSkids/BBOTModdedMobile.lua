@@ -2480,41 +2480,52 @@ end)
 				Slider.Callback(value)
 			end				
 			--
-			local function ISlide(input)
-				local sizeX = (input.Position.X - ToggleFrame.AbsolutePosition.X) / ToggleFrame.AbsoluteSize.X
-				local value = ((Slider.Max - Slider.Min) * sizeX) + Slider.Min
-				Set(value)
-			end
-			--
-			Library:Connection(ToggleFrame.InputBegan, function(input)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					Sliding = true
-					ISlide(input)
-				end
-			end)
-			Library:Connection(ToggleFrame.InputEnded, function(input)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					Sliding = false
-				end
-			end)
-			Library:Connection(ToggleAccent.InputBegan, function(input)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					Sliding = true
-					ISlide(input)
-				end
-			end)
-			Library:Connection(ToggleAccent.InputEnded, function(input)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					Sliding = false
-				end
-			end)
-			Library:Connection(game:GetService("UserInputService").InputChanged, function(input)
-				if input.UserInputType == Enum.UserInputType.MouseMovement then
-					if Sliding then
-						ISlide(input)
-					end
-				end
-			end)
+local UIS = game:GetService("UserInputService")
+
+local function ISlide(input)
+    local sizeX = (input.Position.X - ToggleFrame.AbsolutePosition.X) / ToggleFrame.AbsoluteSize.X
+    local value = ((Slider.Max - Slider.Min) * sizeX) + Slider.Min
+    Set(value)
+end
+
+-- Detect touch input on ToggleFrame
+Library:Connection(ToggleFrame.InputBegan, function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        Sliding = true
+        ISlide(input)
+    end
+end)
+
+-- Detect when touch ends on ToggleFrame
+Library:Connection(ToggleFrame.InputEnded, function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        Sliding = false
+    end
+end)
+
+-- Detect touch input on ToggleAccent
+Library:Connection(ToggleAccent.InputBegan, function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        Sliding = true
+        ISlide(input)
+    end
+end)
+
+-- Detect when touch ends on ToggleAccent
+Library:Connection(ToggleAccent.InputEnded, function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        Sliding = false
+    end
+end)
+
+-- Handle touch movement
+Library:Connection(UIS.InputChanged, function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        if Sliding then
+            ISlide(input)
+        end
+    end
+end)
 			--
 			function Slider:Set(Value)
 				Set(Value)
