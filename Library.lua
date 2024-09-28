@@ -2518,12 +2518,10 @@ Library:Connection(ToggleAccent.InputEnded, function(input)
     end
 end)
 
--- Handle touch movement
-Library:Connection(UIS.InputChanged, function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        if Sliding then
-            ISlide(input)
-        end
+-- Handle continuous sliding while touch is moving
+Library:Connection(UIS.TouchMoved, function(input)
+    if Sliding then
+        ISlide(input)
     end
 end)
 			--
