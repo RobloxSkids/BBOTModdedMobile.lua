@@ -634,14 +634,14 @@ local UIS = game:GetService("UserInputService")
 Sat.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.Touch then
         slidingsaturation = true
-        update()
+        update(input)
     end
 end)
 
 Sat.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.Touch then
         slidingsaturation = false
-        update()
+        update(input)
     end
 end)
 
@@ -649,21 +649,27 @@ end)
 Hue.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.Touch then
         slidinghue = true
-        update()
+        update(input)
     end
 end)
 
 Hue.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.Touch then
         slidinghue = false
-        update()
+        update(input)
     end
 end)
 
 -- Handle continuous sliding while touch is moving
 Library:Connection(UIS.TouchMoved, function(input)
-    if slidinghue or slidingsaturation then
-        update()
+    if input.UserInputType == Enum.UserInputType.Touch then
+        if slidinghue then
+            update(input)
+        end
+
+        if slidingsaturation then
+            update(input)
+        end
     end
 end)
 
