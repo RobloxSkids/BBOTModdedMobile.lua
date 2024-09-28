@@ -101,7 +101,7 @@ local Library = {
 			[Enum.KeyCode.Plus] = "+",
 			[Enum.KeyCode.Period] = ".",
 			[Enum.KeyCode.Backquote] = "`",
-			[Enum.UserInputType.MouseButton1] = "mouse1",
+			[Enum.UserInputType.Touch] = "mouse1",
 			[Enum.UserInputType.MouseButton2] = "mouse2",
 			[Enum.UserInputType.MouseButton3] = "mouse3"
 		};
@@ -628,50 +628,46 @@ Library.Sections.__index = Library.Sections
 
 			set(default, defaultalpha)
 
-local UIS = game:GetService("UserInputService")
+			Sat.InputBegan:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.Touch then
+					slidingsaturation = true
+					update()
+				end
+			end)
 
--- Detect touch input for saturation slider
-Sat.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        slidingsaturation = true
-        update(input)
-    end
-end)
+			Sat.InputEnded:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.Touch then
+					slidingsaturation = false
+					update()
+				end
+			end)
 
-Sat.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        slidingsaturation = false
-        update(input)
-    end
-end)
+			Hue.InputBegan:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.Touch then
+					slidinghue = true
+					update()
+				end
+			end)
 
--- Detect touch input for hue slider
-Hue.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        slidinghue = true
-        update(input)
-    end
-end)
+			Hue.InputEnded:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.Touch then
+					slidinghue = false
+					update()
+				end
+			end)
 
-Hue.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        slidinghue = false
-        update(input)
-    end
-end)
+			Library:Connection(game:GetService("UserInputService").InputChanged, function(input)
+				if input.UserInputType == Enum.UserInputType.Touch then
 
--- Handle continuous sliding while touch is moving
-Library:Connection(UIS.TouchMoved, function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        if slidinghue then
-            update(input)
-        end
+					if slidinghue then
+						update()
+					end
 
-        if slidingsaturation then
-            update(input)
-        end
-    end
-end)
+					if slidingsaturation then
+						update()
+					end
+				end
+			end)
 
 			local colorpickertypes = {}
 
@@ -680,7 +676,7 @@ end)
 			end
 
 			Library:Connection(game:GetService("UserInputService").InputBegan, function(Input)
-				if ColorOutline.Visible and Input.UserInputType == Enum.UserInputType.MouseButton1 then
+				if ColorOutline.Visible and Input.UserInputType == Enum.UserInputType.Touch then
 					if not Library:IsMouseOverFrame(ColorOutline) and not Library:IsMouseOverFrame(Icon) then
 						ColorOutline.Visible = false
 						parent.ZIndex = 1
@@ -1080,37 +1076,32 @@ end)
 			}
 
 			-- // Dragging
-local UIS = game:GetService("UserInputService")
+			Library:Connection(Outline.MouseButton1Down, function()
+				local Location = game:GetService("UserInputService"):GetMouseLocation()
+				Window.Dragging[1] = true
+				Window.Dragging[2] = UDim2.new(0, Location.X - Outline.AbsolutePosition.X, 0, Location.Y - Outline.AbsolutePosition.Y)
+			end)
+			Library:Connection(game:GetService("UserInputService").InputEnded, function(Input)
+				if Input.UserInputType == Enum.UserInputType.Touch and Window.Dragging[1] then
+					local Location = game:GetService("UserInputService"):GetMouseLocation()
+					Window.Dragging[1] = false
+					Window.Dragging[2] = UDim2.new(0, 0, 0, 0)
+				end
+			end)
+			Library:Connection(game:GetService("UserInputService").InputChanged, function(Input)
+				local Location = game:GetService("UserInputService"):GetMouseLocation()
+				local ActualLocation = nil
 
--- Detect touch input instead of mouse down
-Library:Connection(Outline.InputBegan, function(Input)
-    if Input.UserInputType == Enum.UserInputType.Touch then
-        local Location = Input.Position
-        Window.Dragging[1] = true
-        Window.Dragging[2] = UDim2.new(0, Location.X - Outline.AbsolutePosition.X, 0, Location.Y - Outline.AbsolutePosition.Y)
-    end
-end)
-
--- Handle when touch ends
-Library:Connection(UIS.InputEnded, function(Input)
-    if Input.UserInputType == Enum.UserInputType.Touch and Window.Dragging[1] then
-        Window.Dragging[1] = false
-        Window.Dragging[2] = UDim2.new(0, 0, 0, 0)
-    end
-end)
-
--- Handle touch movement
-Library:Connection(UIS.InputChanged, function(Input)
-    if Input.UserInputType == Enum.UserInputType.Touch and Window.Dragging[1] then
-        local Location = Input.Position
-        Outline.Position = UDim2.new(
-            0,
-            Location.X - Window.Dragging[2].X.Offset + (Outline.Size.X.Offset * Outline.AnchorPoint.X),
-            0,
-            Location.Y - Window.Dragging[2].Y.Offset + (Outline.Size.Y.Offset * Outline.AnchorPoint.Y)
-        )
-    end
-end)
+				-- Dragging
+				if Window.Dragging[1] then
+					Outline.Position = UDim2.new(
+						0,
+						Location.X - Window.Dragging[2].X.Offset + (Outline.Size.X.Offset * Outline.AnchorPoint.X),
+						0,
+						Location.Y - Window.Dragging[2].Y.Offset + (Outline.Size.Y.Offset * Outline.AnchorPoint.Y)
+					)
+				end
+			end)
 			Library:Connection(game:GetService("UserInputService").InputBegan, function(Input)
 				if Input.KeyCode == Library.UIKey then
 					Library:SetOpen(not Library.Open)
@@ -2290,7 +2281,7 @@ end)
 				end)
 				--
 				Library:Connection(game:GetService("UserInputService").InputBegan, function(Input)
-					if ModeBox.Visible and (Input.UserInputType == Enum.UserInputType.MouseButton1) then
+					if ModeBox.Visible and (Input.UserInputType == Enum.UserInputType.Touch) then
 						if not Library:IsMouseOverFrame(ModeBox) then
 							ModeBox.Visible = false
 							NewToggle.ZIndex = 1
@@ -2484,50 +2475,41 @@ end)
 				Slider.Callback(value)
 			end				
 			--
-local UIS = game:GetService("UserInputService")
-
-local function ISlide(input)
-    local sizeX = (input.Position.X - ToggleFrame.AbsolutePosition.X) / ToggleFrame.AbsoluteSize.X
-    local value = ((Slider.Max - Slider.Min) * sizeX) + Slider.Min
-    Set(value)
-end
-
--- Detect touch input on ToggleFrame
-Library:Connection(ToggleFrame.InputBegan, function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        Sliding = true
-        ISlide(input)
-    end
-end)
-
--- Detect when touch ends on ToggleFrame
-Library:Connection(ToggleFrame.InputEnded, function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        Sliding = false
-    end
-end)
-
--- Detect touch input on ToggleAccent
-Library:Connection(ToggleAccent.InputBegan, function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        Sliding = true
-        ISlide(input)
-    end
-end)
-
--- Detect when touch ends on ToggleAccent
-Library:Connection(ToggleAccent.InputEnded, function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        Sliding = false
-    end
-end)
-
--- Handle continuous sliding while touch is moving
-Library:Connection(UIS.TouchMoved, function(input)
-    if Sliding then
-        ISlide(input)
-    end
-end)
+			local function ISlide(input)
+				local sizeX = (input.Position.X - ToggleFrame.AbsolutePosition.X) / ToggleFrame.AbsoluteSize.X
+				local value = ((Slider.Max - Slider.Min) * sizeX) + Slider.Min
+				Set(value)
+			end
+			--
+			Library:Connection(ToggleFrame.InputBegan, function(input)
+				if input.UserInputType == Enum.UserInputType.Touch then
+					Sliding = true
+					ISlide(input)
+				end
+			end)
+			Library:Connection(ToggleFrame.InputEnded, function(input)
+				if input.UserInputType == Enum.UserInputType.Touch then
+					Sliding = false
+				end
+			end)
+			Library:Connection(ToggleAccent.InputBegan, function(input)
+				if input.UserInputType == Enum.UserInputType.Touch then
+					Sliding = true
+					ISlide(input)
+				end
+			end)
+			Library:Connection(ToggleAccent.InputEnded, function(input)
+				if input.UserInputType == Enum.UserInputType.Touch then
+					Sliding = false
+				end
+			end)
+			Library:Connection(game:GetService("UserInputService").InputChanged, function(input)
+				if input.UserInputType == Enum.UserInputType.Touch then
+					if Sliding then
+						ISlide(input)
+					end
+				end
+			end)
 			--
 			function Slider:Set(Value)
 				Set(Value)
@@ -2701,7 +2683,7 @@ end)
 				end
 			end)
 			Library:Connection(game:GetService("UserInputService").InputBegan, function(Input)
-				if ContentOutline.Visible and Input.UserInputType == Enum.UserInputType.MouseButton1 then
+				if ContentOutline.Visible and Input.UserInputType == Enum.UserInputType.Touch then
 					if not Library:IsMouseOverFrame(ContentOutline) and not Library:IsMouseOverFrame(ToggleFrame) then
 						ContentOutline.Visible = false
 						NewList.ZIndex = 1
@@ -3262,7 +3244,7 @@ end)
 			end)
 			--
 			Library:Connection(game:GetService("UserInputService").InputBegan, function(Input)
-				if ModeBox.Visible and (Input.UserInputType == Enum.UserInputType.MouseButton1) then
+				if ModeBox.Visible and (Input.UserInputType == Enum.UserInputType.Touch) then
 					if not Library:IsMouseOverFrame(ModeBox) then
 						ModeBox.Visible = false
 						NewKey.ZIndex = 1
