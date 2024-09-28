@@ -628,46 +628,44 @@ Library.Sections.__index = Library.Sections
 
 			set(default, defaultalpha)
 
-			Sat.InputBegan:Connect(function(input)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					slidingsaturation = true
-					update()
-				end
-			end)
+local UIS = game:GetService("UserInputService")
 
-			Sat.InputEnded:Connect(function(input)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					slidingsaturation = false
-					update()
-				end
-			end)
+-- Detect touch input for saturation slider
+Sat.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        slidingsaturation = true
+        update()
+    end
+end)
 
-			Hue.InputBegan:Connect(function(input)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					slidinghue = true
-					update()
-				end
-			end)
+Sat.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        slidingsaturation = false
+        update()
+    end
+end)
 
-			Hue.InputEnded:Connect(function(input)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					slidinghue = false
-					update()
-				end
-			end)
+-- Detect touch input for hue slider
+Hue.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        slidinghue = true
+        update()
+    end
+end)
 
-			Library:Connection(game:GetService("UserInputService").InputChanged, function(input)
-				if input.UserInputType == Enum.UserInputType.MouseMovement then
+Hue.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        slidinghue = false
+        update()
+    end
+end)
 
-					if slidinghue then
-						update()
-					end
-
-					if slidingsaturation then
-						update()
-					end
-				end
-			end)
+-- Handle continuous sliding while touch is moving
+Library:Connection(UIS.TouchMoved, function(input)
+    if slidinghue or slidingsaturation then
+        update()
+    end
+end)
 
 			local colorpickertypes = {}
 
