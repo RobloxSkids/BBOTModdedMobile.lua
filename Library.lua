@@ -685,7 +685,7 @@ Library.Sections.__index = Library.Sections
 			end)
 
 			Icon.MouseButton1Down:Connect(function()
-				ColorOutline.Visible = not ColorOutline.Visible
+				ColorOutline.Visible = not ColorOutlone.Visible
 				parent.ZIndex = 5
 
 				if slidinghue then
@@ -927,7 +927,7 @@ Library.Sections.__index = Library.Sections
 			Outline.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 			Outline.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			Outline.Position = UDim2.new(0.5, 0, 0.5, 0)
-			Outline.Size = UDim2.new(0, 500, 0, 380)
+			Outline.Size = UDim2.new(0, 500, 0, 600)
 			Library.Holder = Outline
 			Outline.Text = ""
 			Outline.AutoButtonColor = false
