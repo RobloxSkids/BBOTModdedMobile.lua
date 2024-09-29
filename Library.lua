@@ -684,7 +684,7 @@ Library.Sections.__index = Library.Sections
 				end
 			end)
 
-			Icon.Touch:Connect(function()
+			Icon.MouseButton1Down:Connect(function()
 				ColorOutline.Visible = true
 				parent.ZIndex = 5
 
@@ -1076,7 +1076,7 @@ Library.Sections.__index = Library.Sections
 			}
 
 			-- // Dragging
-			Library:Connection(Outline.Touch, function()
+			Library:Connection(Outline.MouseButton1Down, function()
 				local Location = game:GetService("UserInputService"):GetMouseLocation()
 				Window.Dragging[1] = true
 				Window.Dragging[2] = UDim2.new(0, Location.X - Outline.AbsolutePosition.X, 0, Location.Y - Outline.AbsolutePosition.Y)
@@ -1387,7 +1387,7 @@ Library.Sections.__index = Library.Sections
 				end
 			end
 			--
-			Library:Connection(NewPage.Touch, function()
+			Library:Connection(NewPage.MouseButton1Down, function()
 				if not Page.Open then
 					Page:Turn(true)
 					for _, Pages in pairs(Page.Window.Pages) do
@@ -1747,7 +1747,7 @@ Library.Sections.__index = Library.Sections
 					end
 				end;
 
-				Library:Connection(NewPage.Touch, function()
+				Library:Connection(NewPage.MouseButton1Down, function()
 					if not MultiSection.Open then
 						MultiSection:Turn(true)
 						for index, other_page in pairs(SectionShit2.ActualSections) do
@@ -1903,7 +1903,7 @@ Library.Sections.__index = Library.Sections
 				Toggle.Callback(Toggle.Toggled)
 			end
 			--
-			Library:Connection(NewToggle.Touch, SetState)
+			Library:Connection(NewToggle.MouseButton1Down, SetState)
 
 			function Toggle:Colorpicker(Properties)
 				local Properties = Properties or {}
@@ -2253,7 +2253,7 @@ Library.Sections.__index = Library.Sections
 					NewToggle.ZIndex = 5
 				end)
 				--
-				Library:Connection(Hold.Touch, function()
+				Library:Connection(Hold.MouseButton1Down, function()
 					set("Hold")
 					Hold.TextColor3 = Color3.fromRGB(255,255,255)
 					Toggle.TextColor3 = Color3.fromRGB(145,145,145)
@@ -2262,7 +2262,7 @@ Library.Sections.__index = Library.Sections
 					NewToggle.ZIndex = 1
 				end)
 				--
-				Library:Connection(Toggle.Touch, function()
+				Library:Connection(Toggle.MouseButton1Down, function()
 					set("Toggle")
 					Hold.TextColor3 = Color3.fromRGB(145,145,145)
 					Toggle.TextColor3 = Color3.fromRGB(255,255,255)
@@ -2271,7 +2271,7 @@ Library.Sections.__index = Library.Sections
 					NewToggle.ZIndex = 1
 				end)
 				--
-				Library:Connection(Always.Touch, function()
+				Library:Connection(Always.MouseButton1Down, function()
 					set("Always")
 					Hold.TextColor3 = Color3.fromRGB(145,145,145)
 					Toggle.TextColor3 = Color3.fromRGB(145,145,145)
@@ -2674,7 +2674,7 @@ Library.Sections.__index = Library.Sections
 			Title.Parent = NewList
 
 			-- // Connections
-			Library:Connection(ToggleFrame.Touch, function()
+			Library:Connection(ToggleFrame.MouseButton1Down, function()
 				ContentOutline.Visible = not ContentOutline.Visible
 				if ContentOutline.Visible then
 					NewList.ZIndex = 5
@@ -2695,7 +2695,7 @@ Library.Sections.__index = Library.Sections
 			local Count = 0
 			--
 			local function handleoptionclick(option, button, text, accent)
-				button.Touch:Connect(function()
+				button.MouseButton1Down:Connect(function()
 					if Dropdown.Max then
 						if table.find(chosen, option) then
 							table.remove(chosen, table.find(chosen, option))
@@ -3216,7 +3216,7 @@ Library.Sections.__index = Library.Sections
 				NewKey.ZIndex = 5
 			end)
 			--
-			Library:Connection(Hold.Touch, function()
+			Library:Connection(Hold.MouseButton1Down, function()
 				set("Hold")
 				Hold.TextColor3 = Color3.fromRGB(255,255,255)
 				Toggle.TextColor3 = Color3.fromRGB(145,145,145)
@@ -3225,7 +3225,7 @@ Library.Sections.__index = Library.Sections
 				NewKey.ZIndex = 1
 			end)
 			--
-			Library:Connection(Toggle.Touch, function()
+			Library:Connection(Toggle.MouseButton1Down, function()
 				set("Toggle")
 				Hold.TextColor3 = Color3.fromRGB(145,145,145)
 				Toggle.TextColor3 = Color3.fromRGB(255,255,255)
@@ -3234,7 +3234,7 @@ Library.Sections.__index = Library.Sections
 				NewKey.ZIndex = 1
 			end)
 			--
-			Library:Connection(Always.Touch, function()
+			Library:Connection(Always.MouseButton1Down, function()
 				set("Always")
 				Hold.TextColor3 = Color3.fromRGB(145,145,145)
 				Toggle.TextColor3 = Color3.fromRGB(145,145,145)
@@ -3609,7 +3609,7 @@ Library.Sections.__index = Library.Sections
 
 			ToggleFrame.Parent = NewButton
 			--
-			Library:Connection(NewButton.Touch, function()
+			Library:Connection(NewButton.MouseButton1Down, function()
 				Button.Callback()
 				tween_service:Create(Value,TweenInfo.new(0.25,Enum.EasingStyle.Quad,Enum.EasingDirection.InOut),{TextColor3 = Library.Accent}):Play()
 				task.spawn(function()
