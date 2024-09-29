@@ -685,7 +685,7 @@ Library.Sections.__index = Library.Sections
 			end)
 
 			Icon.MouseButton1Down:Connect(function()
-				ColorOutline.Visible = not ColorOutlone.Visible
+				ColorOutline.Visible = not ColorOutline.Visible
 				parent.ZIndex = 5
 
 				if slidinghue then
