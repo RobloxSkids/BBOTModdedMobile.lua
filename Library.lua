@@ -907,14 +907,14 @@ Library.Sections.__index = Library.Sections
 		local Sections = Library.Sections;
 		--
 		function Library:Window(Options)
-			local Window = {
-				Pages = {};
-				Sections = {};
-				Elements = {};
-				Dragging = { false, UDim2.new(0, 0, 0, 0) };
-				Name = Options.Name or "BitchestBot";
-				Size = Options.Size or UDim2.new(0, 400, 0, 400);
-			};
+	local Window = {
+		Pages = {};
+		Sections = {};
+		Elements = {};
+		Dragging = { false, UDim2.new(0, 0, 0, 0) };
+		Name = Options.Name or "BitchestBot";
+		Size = Options.Size or UDim2.new(0, 400, 0, 400); -- Ensure Options.Size is applied here
+	};
 			
 			local size = Window.Size
 			--
