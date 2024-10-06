@@ -915,6 +915,8 @@ Library.Sections.__index = Library.Sections
 				Name = Options.Name or "BitchestBot";
 				Size = Options.Size or UDim2.new(0, 400, 0, 400);
 			};
+			
+			local size = Window.Size
 			--
 			local ScreenGui = Instance.new("ScreenGui", game:GetService("RunService"):IsStudio() and game.Players.LocalPlayer.PlayerGui or game.CoreGui)
 			ScreenGui.Name = "ScreenGui"
@@ -928,7 +930,7 @@ Library.Sections.__index = Library.Sections
 			Outline.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 			Outline.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			Outline.Position = UDim2.new(0.5, 0, 0.5, 0)
-			Outline.Size = Window.Pages.Size
+			Outline.Size = size
 			Library.Holder = Outline
 			Outline.Text = ""
 			Outline.AutoButtonColor = false
